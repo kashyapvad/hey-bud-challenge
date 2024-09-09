@@ -20,6 +20,9 @@ gem "redis", ">= 4.0.1"
 #db
 gem 'mongoid', '~> 9.0.1'
 
+#misc
+gem 'ostruct'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
