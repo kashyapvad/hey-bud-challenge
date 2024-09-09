@@ -17,6 +17,8 @@ gem "jbuilder"
 # Use Redis adapter to run Action Cable in production
 gem "redis", ">= 4.0.1"
 
+gem 'dotenv-rails', '~> 3.1.2'
+
 #db
 gem 'mongoid', '~> 9.0.1'
 
