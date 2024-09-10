@@ -23,6 +23,9 @@ gem 'httparty', '~> 0.22.0'
 #db
 gem 'mongoid', '~> 9.0.1'
 
+#aws
+gem 'aws-sdk-s3', '~> 1.160'
+
 #misc
 gem 'ostruct'
 
