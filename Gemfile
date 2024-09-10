@@ -18,6 +18,7 @@ gem "jbuilder"
 gem "redis", ">= 4.0.1"
 
 gem 'dotenv-rails', '~> 3.1.2'
+gem 'httparty', '~> 0.22.0'
 
 #db
 gem 'mongoid', '~> 9.0.1'
