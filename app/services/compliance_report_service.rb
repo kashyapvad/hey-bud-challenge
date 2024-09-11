@@ -25,15 +25,16 @@ class ComplianceReportService
           attachments: [{:file_id=>plan.file, :tools=>[{:type=>"file_search"}]}]
         }
       ]
-      ComplianceReportWorker.fire governing_body.assistant, messages
+      ComplianceReportWorker.fire plan.id.to_s, messages
     end
   end
 
-  def self.update_report plan, parameters
-    return unless parameters
-    report = plan.report || {}
-    report[:parameters] ||= []
-    report[:parameters] += parameters
-    plan.set report: report
+  def self.extract_parameters assistant, messages
+    response = GptClient.create_thread_and_run_assistant assistant, messages
+    thread_id = response[:thread_id]
+    ms = GptClient.messages thread_id
+    last_message = (ms[:data]&.first || {})[:content]
+    return unless last_message
+    parameters = eval(last_message.first[:text][:value].gsub("`", "").gsub("json", ""))
   end
 end

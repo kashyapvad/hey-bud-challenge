@@ -18,6 +18,14 @@ class Plan
     return unless plan
     ComplianceReportService.generate_report self
   end
+  
+  def update_report parameters
+    return unless parameters
+    r = self.report || {}
+    r[:parameters] ||= []
+    r[:parameters] += parameters
+    plan.set report: r
+  end
 
   def check_if_report_is_complete?
     parameters_check = {}
