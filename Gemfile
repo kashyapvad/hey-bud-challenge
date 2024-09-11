@@ -19,6 +19,7 @@ gem "redis", ">= 4.0.1"
 
 gem 'dotenv-rails', '~> 3.1.2'
 gem 'httparty', '~> 0.22.0'
+gem 'sidekiq', '~> 7.3.0'
 
 #db
 gem 'mongoid', '~> 9.0.1'

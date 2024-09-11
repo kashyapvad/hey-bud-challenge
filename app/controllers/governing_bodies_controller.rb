@@ -1,25 +1,25 @@
-class ComplianceReportsController < ApplicationController
-  before_action :set_compliance_report, only: %i[ show edit update destroy ]
+class GoverningBodiesController < ApplicationController
+  before_action :set_governing_body, only: %i[ show edit update destroy ]
 
-  # GET /compliance_reports or /compliance_reports.json
+  # GET /governing_bodies or /governing_bodies.json
   def index
-    @compliance_reports = ComplianceReport.all
+    @governing_bodies = ComplianceReport.all
   end
 
-  # GET /compliance_reports/1 or /compliance_reports/1.json
+  # GET /governing_bodies/1 or /governing_bodies/1.json
   def show
   end
 
-  # GET /compliance_reports/new
+  # GET /governing_bodies/new
   def new
     @compliance_report = ComplianceReport.new
   end
 
-  # GET /compliance_reports/1/edit
+  # GET /governing_bodies/1/edit
   def edit
   end
 
-  # POST /compliance_reports or /compliance_reports.json
+  # POST /governing_bodies or /governing_bodies.json
   def create
     @compliance_report = ComplianceReport.new(compliance_report_params)
 
@@ -34,7 +34,7 @@ class ComplianceReportsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /compliance_reports/1 or /compliance_reports/1.json
+  # PATCH/PUT /governing_bodies/1 or /governing_bodies/1.json
   def update
     respond_to do |format|
       if @compliance_report.update(compliance_report_params)
@@ -47,24 +47,24 @@ class ComplianceReportsController < ApplicationController
     end
   end
 
-  # DELETE /compliance_reports/1 or /compliance_reports/1.json
+  # DELETE /governing_bodies/1 or /governing_bodies/1.json
   def destroy
     @compliance_report.destroy!
 
     respond_to do |format|
-      format.html { redirect_to compliance_reports_url, notice: "Compliance report was successfully destroyed." }
+      format.html { redirect_to governing_bodies_url, notice: "Compliance report was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_compliance_report
+    def set_governing_body
       @compliance_report = ComplianceReport.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
-    def compliance_report_params
+    def governing_body_params
       params.fetch(:compliance_report, {})
     end
 end
