@@ -9,38 +9,38 @@ class Plan
 
   belongs_to :governing_body, index: true
 
-  validates :governance_body, presence: true
+  validates :governing_body, presence: true
 
-  after_save :check_if_report_is_complete?  if: -> { compliance_report_changed? }
-
+  after_initialize :check_if_report_is_complete?
 
   def generate_report
-    return unless plan
+    return unless file
     ComplianceReportService.generate_report self
   end
   
-  def update_report parameters
-    return unless parameters
-    r = self.report || {}
+  def update_report report
+    return unless report.present?
+    rep = report.with_indifferent_access
+    r = self.compliance_report || {}
     r[:parameters] ||= []
-    r[:parameters] += parameters
-    plan.set report: r
+    r[:summary] ||= []
+    r[:parameters] += rep[:report]
+    r[:summary] += rep[:summary]
+    set compliance_report: r
   end
 
   def check_if_report_is_complete?
-    parameters_check = {}
-    governance_body.parameters.each{ |p| parameters_check[p.downcase.to_key.to_sym] = false }
-    compliance_report.each do |key, val|
-      if key.to_sym.eql? :parameters
-        val.each do |v|
-          vs = v.with_indifferent_access
-          parameter = vs[:description].downcase.to_key.to_sym
-          next unless parameters_check.keys.map(&:to_sym).include? parameter
-          parameters_check[parameter] = true
-        end
-      end
-    end
-    set report_complete: true if !parameters_check.values.include? false
+    s = Sidekiq::ScheduledSet.new
+    b = Sidekiq::Workers.new
+    r = Sidekiq::RetrySet.new
+    q = Sidekiq::Queue.new("reports")
+
+    j_count = s.select{|j| j.queue.eql? "reports" and j.args.first.eql? self.id.to_s}.count
+    j_count += r.select{|j| j.queue.eql? "reports" and j.args.first.eql? self.id.to_s}.count
+    j_count += q.select{|j| j.args.first.eql? self.id.to_s}.count
+    j_count += 1 if b.map{|p| p.to_s.include?("ExtractAndUpdateReportWorker") and p.to_s.include?(self.id.to_s)}.include? true
+
+    set report_complete: true if j_count.zero?
     report_complete
   end
 end

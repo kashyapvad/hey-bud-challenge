@@ -11,8 +11,8 @@ class GoverningBody
   field :assistant, type: :string
   field :parameters, type: :array
   #field :vector_store, type: :string
-  field :files, type: :hash, default: REQUIRED_FILES
-  field :prompt, type: :string
+  #field :files, type: :hash, default: REQUIRED_FILES
+  #field :prompt, type: :string
 
   has_many :plans
 end

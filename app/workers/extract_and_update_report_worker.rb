@@ -1,4 +1,4 @@
-class ExtractParametersWorker
+class ExtractAndUpdateReportWorker
   include Sidekiq::Worker
   sidekiq_options queue: 'reports'
 
@@ -13,7 +13,12 @@ class ExtractParametersWorker
   def perform plan_id, messages, options={}
     plan = Plan.where(id: plan_id).first
     return unless plan
-    parameters = ComplianceReportService.extract_parameters plan.governance_body.assistant, messages
-    plan.update_report parameters
+    governing_body = plan.governing_body
+    return unless governing_body
+    assistant = governing_body.assistant
+    return unless assistant
+    ms = eval messages
+    report = ComplianceReportService.extract_parameters plan.governing_body.assistant, ms
+    plan.update_report report
   end
 end
