@@ -1,18 +1,20 @@
-class GoverningBodiesController < ApplicationController
-  #before_action :set_governing_body, only: %i[ show edit update destroy ]
+class PlansController < ApplicationController
+  before_action :set_plan, only: %i[ show edit update destroy ]
 
   # GET /governing_bodies or /governing_bodies.json
   def index
-    @governing_bodies = ComplianceReport.all
+    @plans = Plan.all
   end
 
   # GET /governing_bodies/1 or /governing_bodies/1.json
   def show
+    puts ">>>>>>>>"
+    puts @plan.compliance_report
   end
 
   # GET /governing_bodies/new
   def new
-    @compliance_report = ComplianceReport.new
+    @plan = Plan.new
   end
 
   # GET /governing_bodies/1/edit
@@ -59,12 +61,12 @@ class GoverningBodiesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_governing_body
-      @compliance_report = ComplianceReport.find(params[:id])
+    def set_plan
+      @plan = Plan.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
-    def governing_body_params
-      params.fetch(:compliance_report, {})
+    def plan_params
+      params.fetch(:plan, {})
     end
 end
