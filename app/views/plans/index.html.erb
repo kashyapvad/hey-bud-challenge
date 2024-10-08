@@ -61,18 +61,17 @@
 
     <%= form_with(model: @plan, local: true, multipart: true) do |form| %>
       <div class="form-group">
-        <%= form.label :pdf, "Upload PDF" %><br>
-        <%= form.file_field :pdf, class: "form-control" %>
+        <%= form.file_field :pdf, class: "file-upload-btn" %>
       </div>
     
       <div class="actions">
-        <%= form.submit "Upload", class: "btn btn-primary" %>
+        <%= form.submit "Upload", class: "upload-btn" %>
       </div>
     <% end %>
 
   </div>
 
-  <div id="compliance_reports">
+  <div id="compliance_reports" class="container">
     <% @plans.each do |plan| %>
       <p>
         <%= link_to plan.title, plan_path(plan) %>
@@ -84,8 +83,7 @@
     <% end %>
   </div>
 
-  <%= link_to "New compliance report", new_plan_path %>
+  <%= link_to "New compliance report", new_plan_path, class: "upload-btn" %>
 
 </body>
 </html>
-
