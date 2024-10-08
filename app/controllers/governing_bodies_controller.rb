@@ -21,7 +21,7 @@ class GoverningBodiesController < ApplicationController
 
   # POST /governing_bodies or /governing_bodies.json
   def create
-    @compliance_report = ComplianceReport.new(compliance_report_params)
+    @compliance_report = ComplianceReportService.new(compliance_report_params)
 
     respond_to do |format|
       if @compliance_report.save

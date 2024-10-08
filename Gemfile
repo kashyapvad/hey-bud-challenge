@@ -30,6 +30,8 @@ gem 'aws-sdk-s3', '~> 1.160'
 #misc
 gem 'ostruct'
 
+gem 'fiddle'
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
