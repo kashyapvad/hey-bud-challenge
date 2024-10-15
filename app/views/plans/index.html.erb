@@ -2,88 +2,127 @@
 <html>
 <head>
   <title>AI Construction Takeoff</title>
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_importmap_tags %>
+
   <style>
+    /* General styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
     .container {
-      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 40px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
       margin-top: 50px;
     }
 
     .title {
       font-family: 'Courier New', Courier, monospace;
-      font-size: 30px;
+      font-size: 36px;
       font-weight: bold;
-      color: #d9534f; /* Red color for the title */
+      color: #d9534f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
       margin-bottom: 20px;
     }
 
-    .black-bar {
-      background-color: black;
-      height: 50px;
+    label {
+      font-size: 14px;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input[type="email"],
+    input[type="file"] {
       width: 100%;
-      margin-bottom: 20px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease-in-out;
     }
 
-    .file-upload-btn {
-      background-color: #f5f5f5;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      color: black;
-      padding: 10px 20px;
-      font-size: 16px;
+    input[type="email"]:focus,
+    input[type="file"]:focus {
+      border-color: #5bc0de;
+      outline: none;
     }
 
     .upload-btn {
+      display: block;
+      width: 100%;
       background-color: #5bc0de;
       color: white;
-      padding: 10px 20px;
-      border-radius: 4px;
+      padding: 14px;
       border: none;
-      margin-top: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
     }
 
     .upload-btn:hover {
       background-color: #31b0d5;
     }
 
-    .status {
-      margin-top: 20px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 18px;
-      color: black;
+    .upload-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .title {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="title">AI CONSTRUCTION TAKEOFF</div>
 
     <%= form_with(model: @plan, local: true, multipart: true) do |form| %>
+      <!-- Email Input Field -->
       <div class="form-group">
-        <%= form.file_field :pdf, class: "file-upload-btn" %>
+        <%= form.label :email, "Email Address" %>
+        <%= form.email_field :email, id: "email-field", class: "form-control", required: true %>
       </div>
-    
+
+      <!-- File Upload Input Field -->
+      <div class="form-group">
+        <%= form.label :pdf, "Upload PDF" %>
+        <%= form.file_field :pdf, id: "file-field", class: "form-control", accept: ".pdf", required: true %>
+      </div>
+
+      <!-- Upload Button -->
       <div class="actions">
-        <%= form.submit "Upload", class: "upload-btn" %>
+        <%= form.submit "Upload", class: "upload-btn", id: "upload-btn" %>
       </div>
     <% end %>
-
   </div>
-
-  <div id="compliance_reports" class="container">
-    <% @plans.each do |plan| %>
-      <p>
-        <%= link_to plan.title, plan_path(plan) %>
-        <% if plan.pdf.attached? %>
-          <br>
-          <%= link_to "Download PDF", rails_blob_path(plan.pdf, disposition: "attachment") %>
-        <% end %>
-      </p>
-    <% end %>
-  </div>
-
-  <%= link_to "New compliance report", new_plan_path, class: "upload-btn" %>
-
 </body>
 </html>

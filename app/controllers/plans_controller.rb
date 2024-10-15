@@ -86,11 +86,11 @@ class PlansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def plan_params
-      params.require(:plan).permit(:title, :pdf)  # Allow PDF file to be uploaded
+      params.require(:plan).permit(:title, :pdf, :email)  # Added :PDF and email to permitted parameters
     end
 
     # Only allow a list of trusted parameters for ComplianceReport.
     def compliance_report_params
-      params.require(:compliance_report).permit(:title, :pdf)  # Allow PDF in compliance report params
+      params.require(:compliance_report).permit(:title, :pdf, :email)  # Added :PDF and email to permitted parameters
     end
 end
