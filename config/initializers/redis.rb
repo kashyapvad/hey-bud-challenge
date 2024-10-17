@@ -53,7 +53,7 @@ def initialize_redis_client
 
   redis_uri = URI.parse REDIS_URI
 
-  $redis_client = Redis.new(host: redis_uri.host, port: redis_uri.port, password: redis_uri.password) rescue nil
+  $redis_client = Redis.new(host: redis_uri.host, port: redis_uri.port, password: ENV['REDIS_PASSWORD']) rescue nil
 
   if $redis_client
     puts ":: REDIS: connected to #{redis_uri}"
