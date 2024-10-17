@@ -32,7 +32,7 @@ class Plan
     r[:parameters] += rep[:report].map do |h| 
       h.transform_keys do |k| 
         key = k.downcase.to_key
-        key = "extracted/analyzed_value" if key.eql? "extracted/analyzed_values" or key.eql? "extracted_value/analyzed_value" or key.eql? "extracted_values/analyzed_values" or key.eql? "extracted_values/analyzed_value" or key.eql? "extracted_value/analyzed_values"
+        key = "extracted/analyzed_value" if key.eql? "extracted/analyzed_values" or key.eql? "extracted_value/analyzed_value" or key.eql? "extracted_values/analyzed_values" or key.eql? "extracted_values/analyzed_value" or key.el? "extracted_value/analyzed_values"
         key
       end
     end
@@ -52,10 +52,10 @@ class Plan
     r = Sidekiq::RetrySet.new
     q = Sidekiq::Queue.new("reports")
 
-    j_count = s.select{|j| j.queue.eql? "reports" and j.args.first.eql? p.id.to_s}.count
-    j_count += r.select{|j| j.queue.eql? "reports" and j.args.first.eql? p.id.to_s}.count
-    j_count += q.select{|j| j.args.first.eql? p.id.to_s}.count
-    j_count += 1 if b.map{|p| p.to_s.include?("ExtractAndUpdateReportWorker") and p.to_s.include?(p.id.to_s)}.include? true
+    j_count = s.select{|j| j.queue.eql? "reports" and j.args.first.eql? self.id.to_s}.count
+    j_count += r.select{|j| j.queue.eql? "reports" and j.args.first.eql? self.id.to_s}.count
+    j_count += q.select{|j| j.args.first.eql? self.id.to_s}.count
+    j_count += 1 if b.map{|p| p.to_s.include?("ExtractAndUpdateReportWorker") and p.to_s.include?(self.id.to_s)}.include? true
 
     set report_complete: true if j_count.zero? and !compliance_report.empty?
     report_complete
