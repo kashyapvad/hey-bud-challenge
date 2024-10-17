@@ -15,7 +15,6 @@ class Plan
   validates :governing_body, presence: true
 
   before_save :format_email, if: -> { email_changed? }
-  before_save :share_sheet
   after_create :generate_report
 
   def generate_report
@@ -67,6 +66,6 @@ class Plan
   end
 
   def share_sheet
-    GoogleDriveClient.add_permission report_sheet_id, email, 'reader' if email
+    GoogleDriveClient.add_permission report_sheet_id, email, 'reader' if email and report_sheet_id
   end
 end
