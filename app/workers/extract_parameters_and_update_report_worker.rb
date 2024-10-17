@@ -19,6 +19,6 @@ class ExtractParametersAndUpdateReportWorker
     return unless assistant
     ms = eval messages
     report = ComplianceReportService.extract_parameters plan.governing_body.assistant, ms
-    plan.update_report report
+    plan.reload.update_report report
   end
 end
