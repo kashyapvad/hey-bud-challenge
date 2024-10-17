@@ -17,7 +17,6 @@ class Plan
   before_save :format_email, if: -> { email_changed? }
   before_save :share_sheet
   after_create :generate_report
-  after_initialize :check_if_report_is_complete?
 
   def generate_report
     return unless file
@@ -35,6 +34,7 @@ class Plan
     r[:summary] += rep[:summary]
     set compliance_report: r
     CsvExporterService.export_compliance_report self
+    share_sheet if check_if_report_is_complete? and compliance_report.present?
   end
 
   def google_sheet_link
@@ -61,6 +61,6 @@ class Plan
   end
 
   def share_sheet
-    GoogleDriveClient.add_permission report_sheet_id, email, 'reader' if email and report_complete and compliance_report.present?
+    GoogleDriveClient.add_permission report_sheet_id, email, 'reader' if email
   end
 end
