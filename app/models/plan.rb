@@ -6,7 +6,7 @@ class Plan
   field :email, type: :string
   field :report_sheet_id, type: :string
   field :file, type: :string
-  #field :thread, type: :string #can be used to remmeber the context and enhance the report accuracy
+  field :thread, type: :string #can be used to remmeber the context and enhance the report accuracy
   field :report_complete, type: :boolean, default: false
   field :compliance_report, type: :hash, default: {}
 
@@ -30,7 +30,13 @@ class Plan
     r = self.compliance_report || {}
     r[:parameters] ||= []
     r[:summary] ||= []
-    r[:parameters] += rep[:report].map { |h| h.transform_keys { |k| k.downcase.to_key }  }
+    r[:parameters] += rep[:report].map do |h| 
+      h.transform_keys do |k| 
+        key = k.downcase.to_key
+        key = "extracted/analyzed_value" if key.eql? "extracted_value/analyzed_value"
+        key
+      end
+    end
     r[:summary] += rep[:summary]
     set compliance_report: r
     CsvExporterService.export_compliance_report self
