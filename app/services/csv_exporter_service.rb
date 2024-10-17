@@ -85,7 +85,10 @@ class CsvExporterService
     csv = rows_to_csv rows
     tabs_data[plan.title] = csv
     report_sheet_id = plan.report_sheet_id
-    report_sheet_id ||= GoogleSheetClient.create_new_spreadsheet_for(:compliance_report, plan.title).spreadsheet_id
+    if !report_sheet_id
+      report_sheet_id ||= GoogleSheetClient.create_new_spreadsheet_for(:compliance_report, plan.title).spreadsheet_id
+      GoogleDriveClient.add_permission report_sheet_id, plan.email, 'reader' if plan.email
+    end
     plan.set report_sheet_id: report_sheet_id unless plan.report_sheet_id.present?
     GoogleSheetClient.sync_tabs_for report_sheet_id, tabs_data
   end

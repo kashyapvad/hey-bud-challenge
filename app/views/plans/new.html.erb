@@ -1,9 +1,128 @@
-<h1>New compliance report</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Construction Takeoff</title>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= javascript_importmap_tags %>
 
-<%= render "form", compliance_report: @compliance_report %>
+  <style>
+    /* General styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
 
-<br>
+    .container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 40px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      margin-top: 50px;
+    }
 
-<div>
-  <%= link_to "Back to compliance reports", compliance_reports_path %>
-</div>
+    .title {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 36px;
+      font-weight: bold;
+      color: #d9534f;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #555;
+      display: block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input[type="email"],
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      transition: border-color 0.3s ease-in-out;
+    }
+
+    input[type="email"]:focus,
+    input[type="file"]:focus {
+      border-color: #5bc0de;
+      outline: none;
+    }
+
+    .upload-btn {
+      display: block;
+      width: 100%;
+      background-color: #5bc0de;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    .upload-btn:hover {
+      background-color: #31b0d5;
+    }
+
+    .upload-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Mobile responsiveness */
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .title {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="title">AI CONSTRUCTION TAKEOFF</div>
+
+    <%= form_with(model: @plan, local: true, multipart: true) do |form| %>
+      <!-- Email Input Field -->
+      <div class="form-group">
+        <%= form.label :email, "Email Address" %>
+        <%= form.email_field :email, id: "email-field", class: "form-control", required: true %>
+      </div>
+
+      <!-- File Upload Input Field -->
+      <div class="form-group">
+        <%= form.label :pdf, "Upload PDF" %>
+        <%= form.file_field :pdf, id: "file-field", class: "form-control", accept: ".pdf", required: true %>
+      </div>
+
+      <!-- Upload Button -->
+      <div class="actions">
+        <%= form.submit "Upload", class: "upload-btn", id: "upload-btn" %>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>

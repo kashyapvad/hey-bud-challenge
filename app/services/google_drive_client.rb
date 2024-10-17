@@ -14,7 +14,7 @@ class GoogleDriveClient
 
   def self.authorize user_id=ENV['GOOGLE_DRIVE_AUTHORIZER_USER_ID']
     client_id = nil
-    TempFileService.create_temp_file_for_content ENV['GOOGLE_SECRET_JSON'] do |temp|
+    DevUtils.create_temp_file_for_content ENV['GOOGLE_SECRET_JSON'] do |temp|
       client_id = Google::Auth::ClientId.from_file temp.path
     end
     token_store = Google::Auth::Stores::RedisTokenStore.new redis: global_redis_client
@@ -41,6 +41,7 @@ class GoogleDriveClient
     permission.type = 'user'
     permission.email_address = email
     permission.role = role
-    client(user_id).create_permission file_id, permission, send_notification_email: opts[:send_notification_email]
+    notify = opts[:send_notification_email] || true
+    client(user_id).create_permission file_id, permission, send_notification_email: notify
   end
 end

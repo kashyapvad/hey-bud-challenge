@@ -8,8 +8,6 @@ class PlansController < ApplicationController
 
   # GET /governing_bodies/1 or /governing_bodies/1.json
   def show
-    puts ">>>>>>>>"
-    puts @plan.compliance_report
   end
 
   # GET /governing_bodies/new
@@ -23,49 +21,34 @@ class PlansController < ApplicationController
 
   # POST /governing_bodies or /governing_bodies.json
   def create
-    @compliance_report = ComplianceReportService.new(compliance_report_params)
-
-    respond_to do |format|
-      if @compliance_report.save
-        # Saving PDF (if attached) with the compliance report
-        @compliance_report.pdf.attach(params[:compliance_report][:pdf]) if params[:compliance_report][:pdf].present?
-        
-        format.html { redirect_to compliance_report_url(@compliance_report), notice: "Compliance report was successfully created." }
-        format.json { render :show, status: :created, location: @compliance_report }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @compliance_report.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def upload
-    uploaded_file = params[:file] # Here, :file matches the name in the form field
-
-    if uploaded_file
-      # Logic to handle the uploaded file, e.g., saving it somewhere
-      # You can save it to Active Storage or a specific folder, or process it immediately
-      flash[:notice] = "File uploaded successfully!"
+    file = plan_params[:pdf]
+    email = plan_params[:email]
+    f = GptClient.upload_file file.tempfile.path
+    g = GoverningBody.first #hardcoding Kerala Government as GoverningBOdy for now
+    @plan = g.plans.new email: email, file: f[:id], title: file.original_filename
+    if @plan.save
+      redirect_to plan_url(@plan)
     else
-      flash[:alert] = "No file selected!"
+      redirect_to "/error"
     end
-    redirect_to plans_path
   end
 
   # PATCH/PUT /governing_bodies/1 or /governing_bodies/1.json
   def update
-    respond_to do |format|
-      if @compliance_report.update(compliance_report_params)
-        # Update PDF (if attached) with the compliance report
-        @compliance_report.pdf.attach(params[:compliance_report][:pdf]) if params[:compliance_report][:pdf].present?
+    # respond_to do |format|
+    #   if @compliance_report.update(compliance_report_params)
+    #     # Update PDF (if attached) with the compliance report
+    #     @compliance_report.pdf.attach(params[:compliance_report][:pdf]) if params[:compliance_report][:pdf].present?
 
-        format.html { redirect_to compliance_report_url(@compliance_report), notice: "Compliance report was successfully updated." }
-        format.json { render :show, status: :ok, location: @compliance_report }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @compliance_report.errors, status: :unprocessable_entity }
-      end
-    end
+    #     format.html { redirect_to compliance_report_url(@compliance_report), notice: "Compliance report was successfully updated." }
+    #     format.json { render :show, status: :ok, location: @compliance_report }
+    #   else
+    #     format.html { render :edit, status: :unprocessable_entity }
+    #     format.json { render json: @compliance_report.errors, status: :unprocessable_entity }
+    #   end
+    # end
+
+    puts "ni ayya"
   end
 
   # DELETE /governing_bodies/1 or /governing_bodies/1.json
@@ -78,19 +61,18 @@ class PlansController < ApplicationController
     end
   end
 
+  def error
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_plan
-      @plan = Plan.find(params[:id])
+      @plan = Plan.where(id: params[:id]).first
+      @plan ||= Plan.new
     end
 
     # Only allow a list of trusted parameters through.
     def plan_params
       params.require(:plan).permit(:title, :pdf, :email)  # Added :PDF and email to permitted parameters
-    end
-
-    # Only allow a list of trusted parameters for ComplianceReport.
-    def compliance_report_params
-      params.require(:compliance_report).permit(:title, :pdf, :email)  # Added :PDF and email to permitted parameters
     end
 end
