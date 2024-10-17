@@ -4,7 +4,7 @@ class CsvExporterService
 
   FORMATS = {
     compliance_report: {
-      headers: ["description", "extracted/analysed_values", "kmbr_requirement", "compliance_status"],
+      headers: ["description", "extracted/analyzed_value", "kmbr_requirement", "compliance_status"],
       field_mapping: {}
     }
   }
