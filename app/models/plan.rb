@@ -32,7 +32,7 @@ class Plan
     r[:parameters] += rep[:report].map do |h| 
       h.transform_keys do |k| 
         key = k.downcase.to_key
-        key = "extracted/analyzed_value" if key.eql? "extracted/analyzed_values" or key.eql? "extracted_value/analyzed_value" or key.eql? "extracted_values/analyzed_values" or key.eql? "extracted_values/analyzed_value" or key.el? "extracted_value/analyzed_values"
+        key = "extracted/analyzed_value" if key.eql? "extracted/analyzed_values" or key.eql? "extracted_value/analyzed_value" or key.eql? "extracted_values/analyzed_values" or key.eql? "extracted_values/analyzed_value" or key.eql? "extracted_value/analyzed_values"
         key
       end
     end
