@@ -13,7 +13,7 @@ class ComplianceReportService
           attachments: [{:file_id=>plan.file, :tools=>[{:type=>"file_search"}]}]
         }
       ].to_s
-      ExtractAndUpdateReportWorker.fire_in t, plan.id.to_s, messages
+      ExtractParametersAndUpdateReportWorker.fire_in t, plan.id.to_s, messages
     end
   end
 

@@ -1,4 +1,4 @@
-class ExtractAndUpdateReportWorker
+class ExtractParametersAndUpdateReportWorker
   include Sidekiq::Worker
   sidekiq_options queue: 'reports'
 

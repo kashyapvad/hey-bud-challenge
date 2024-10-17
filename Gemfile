@@ -21,6 +21,11 @@ gem 'dotenv-rails', '~> 3.1.2'
 gem 'httparty', '~> 0.22.0'
 gem 'sidekiq', '~> 7.3.0'
 
+#google
+gem 'googleauth', '~> 1.11'
+gem 'google-api-client', '~> 0.53.0'
+gem 'google-apis-sheets_v4', '~> 0.36.0'
+
 #db
 gem 'mongoid', '~> 9.0.1'
 
