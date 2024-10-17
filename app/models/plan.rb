@@ -15,6 +15,7 @@ class Plan
   validates :governing_body, presence: true
 
   before_save :format_email, if: -> { email_changed? }
+  before_save :share_sheet, if: -> { report_complete_changed? }
   after_create :generate_report
   after_initialize :check_if_report_is_complete?
 
@@ -34,8 +35,6 @@ class Plan
     r[:summary] += rep[:summary]
     set compliance_report: r
     CsvExporterService.export_compliance_report self
-    plan = Plan.find self
-    MailWorker.fire self.id.to_s if plan.report_complete
   end
 
   def google_sheet_link
@@ -53,11 +52,15 @@ class Plan
     j_count += q.select{|j| j.args.first.eql? self.id.to_s}.count
     j_count += 1 if b.map{|p| p.to_s.include?("ExtractAndUpdateReportWorker") and p.to_s.include?(self.id.to_s)}.include? true
 
-    set report_complete: true if j_count.zero? and !compliance_report.empty?
+    set report_complete: true
     report_complete
   end
 
   def format_email
     self.email = email.downcase
+  end
+
+  def share_sheet
+    GoogleDriveClient.add_permission report_sheet_id, email, 'reader' if email and report_complete and !report_complete_was
   end
 end
