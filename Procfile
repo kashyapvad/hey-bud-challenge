@@ -1,5 +1,5 @@
 web: bin/rails server -p $PORT -e $RAILS_ENV
-worker: bundle exec foreman start -c sidekiq=1,clock=1,message=1, -f Procfile.worker.$SERVER_CONTEXT.$SERVER_NAME
+worker: bundle exec foreman start -c sidekiq=1,clock=1,message=1, -f Procfile.worker.live.web
 
 # WEB
 # run node(ui) or rails(api) web server
