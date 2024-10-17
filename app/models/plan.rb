@@ -19,7 +19,8 @@ class Plan
 
   def generate_report
     return unless file
-    set report_complete: false
+    set report_complete: false, compliance_report: {}
+    reload
     ComplianceReportService.generate_report self
   end
   

@@ -4,7 +4,7 @@ class ComplianceReportService
     return unless plan.file
     governing_body = plan.governing_body
     governing_body.parameters.each_slice(10).with_index do | batch, i |
-      t = i * 60.seconds
+      t = i * 90.seconds
       content = batch.each_with_index.map {|p, i| "#{i.to_s}. #{p}"}.join("\n")
       messages = [
         {
