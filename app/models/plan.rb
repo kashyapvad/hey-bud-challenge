@@ -57,7 +57,7 @@ class Plan
     j_count += q.select{|j| j.args.first.eql? self.id.to_s}.count
     j_count += 1 if b.map{|p| p.to_s.include?("ExtractAndUpdateReportWorker") and p.to_s.include?(self.id.to_s)}.include? true
 
-    set report_complete: true
+    set report_complete: true if j_count.zero? and !compliance_report.empty?
     report_complete
   end
 
