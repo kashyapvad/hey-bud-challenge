@@ -1,5 +1,7 @@
 class PlansController < ApplicationController
-  before_action :set_plan, only: %i[ show edit update destroy ]
+  before_action :require_login
+  before_action :set_plan, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user!
 
   # GET /governing_bodies or /governing_bodies.json
   def index
@@ -74,5 +76,11 @@ class PlansController < ApplicationController
     # Only allow a list of trusted parameters through.
     def plan_params
       params.require(:plan).permit(:title, :pdf, :email)  # Added :PDF and email to permitted parameters
+    end
+
+    def authorize_user!
+      unless @plan.organization == current_user.organization
+        redirect_to root_path, alert: 'You are not authorized to access this resource.'
+      end
     end
 end

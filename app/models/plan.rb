@@ -11,8 +11,8 @@ class Plan
   field :compliance_report, type: :hash, default: {}
 
   belongs_to :governing_body, index: true
-
-  validates :governing_body, presence: true
+  belongs_to :user, index: true
+  belongs_to :organization, index: true
 
   before_save :format_email, if: -> { email_changed? }
   after_create :generate_report
