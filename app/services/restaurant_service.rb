@@ -60,6 +60,7 @@ class RestaurantService
       search_cuisine = cuisine.to_s.downcase.squish
       restaurant_cuisine.include?(search_cuisine) || search_cuisine.include?(restaurant_cuisine)
     end
+    data = data.select { |r| r[:rating].to_f >= min_rating }
     data.first(max_results)
   end
 
