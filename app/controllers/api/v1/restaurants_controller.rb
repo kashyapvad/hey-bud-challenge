@@ -16,14 +16,16 @@ class Api::V1::RestaurantsController < Api::BaseController
       raise Api::V1::Errors::CustomError, "Cuisine parameter is required"
     end
 
+    key = "restaurants_#{restaurant_params[:city]}_#{restaurant_params[:neighborhood]}_#{restaurant_params[:cuisine]}_#{restaurant_params[:max_results]}}"
+
     # Get results from Redis Cache
     if restaurant_params[:city].present? and restaurant_params[:neighborhood].present?
-      results = global_redis_client.get("restaurants_#{restaurant_params[:city]}_#{restaurant_params[:neighborhood]}_#{restaurant_params[:cuisine]}")
+      results = global_redis_client.get(key)
       results = eval results if results.present?
     end
     
     if restaurant_params[:longitude].present? and restaurant_params[:latitude].present?
-      results = global_redis_client.get("restaurants_#{restaurant_params[:longitude]}_#{restaurant_params[:latitude]}_#{restaurant_params[:cuisine]}")
+      results = global_redis_client.get(key)
       results = eval results if results.present?
     end
 
@@ -34,11 +36,11 @@ class Api::V1::RestaurantsController < Api::BaseController
     else
       # Save results to Redis Cache
       if restaurant_params[:city].present? and restaurant_params[:neighborhood].present?
-        global_redis_client.set("restaurants_#{restaurant_params[:city]}_#{restaurant_params[:neighborhood]}_#{restaurant_params[:cuisine]}", results, ex: 10.minutes)
+        global_redis_client.set(key, results, ex: 10.minutes)
       end
       
       if restaurant_params[:longitude].present? and restaurant_params[:latitude].present?
-        global_redis_client.set("restaurants_#{restaurant_params[:longitude]}_#{restaurant_params[:latitude]}_#{restaurant_params[:cuisine]}", results, ex: 10.minutes)
+        global_redis_client.set(key, results, ex: 10.minutes)
       end
       RestaurantService.export_to_spreadsheet results, restaurant_params.to_h if restaurant_params[:email].present?
     end
