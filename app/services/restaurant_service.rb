@@ -52,11 +52,11 @@ class RestaurantService
     opts = options.with_indifferent_access
     key = nil
     if opts[:city].present? and opts[:neighborhood].present?
-      key = "restaurants_#{opts[:city]}_#{opts[:neighborhood]}_#{opts[:cuisine]}}"
+      key = "restaurants_#{opts[:city]}_#{opts[:neighborhood]}}}"
     end
 
     if opts[:longitude].present? and opts[:latitude].present?
-      key = "restaurants_#{opts[:longitude]}_#{opts[:latitude]}_#{opts[:cuisine]}}"
+      key = "restaurants_#{opts[:longitude]}_#{opts[:latitude]}}}"
     end
 
     cuisine = opts[:cuisine].to_s.downcase.squish
