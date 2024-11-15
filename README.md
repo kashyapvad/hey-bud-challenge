@@ -18,6 +18,7 @@ Note:
 Solution: 
   I've first used Google Places API to get the list of restaurants and then used OpenAI to enrich the data.
   I've used Redis to cache the results for 10 minutes to improve the performance.
+  I've opted over storing all results in the cache rather than filtered ones as the it expires in 10 minutes. That as long as the location is constant any change in cuisine, min rating and max results can be served from the cache rather than making new calls to the LLMs
   I've added some error handling to the endpoint to return the appropriate response.
 
 Bonus:
