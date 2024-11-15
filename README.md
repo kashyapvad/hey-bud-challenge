@@ -16,6 +16,7 @@ https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?latitude
 Note: 
 1. Heroku imposes a 30 seconds timeout on requests so if you see a an application error from heroku, please try again. (Time out from the app is just a JSON response with error message that looks different from the one by heroku)
 2. when both coordinates and location are provided, coordinates will be used.
+3. Prompt could be improved by enginnering it with more examples to make it more accurate and enriching more attributes.
 
 Solution: 
   I've first used Google Places API to get the list of restaurants and then used OpenAI to enrich the data.
