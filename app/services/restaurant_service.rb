@@ -20,7 +20,7 @@ class RestaurantService
 
     resposne = GooglePlacesClient.nearby_search(query).with_indifferent_access
     raise "Service Unavailable", resposne[:status] if resposne[:status] != "OK"
-    results = (resposne[:results] || [])
+    results = (resposne[:results] || []).first(15) # to reduce the prompt size and avoid heroku timeouts
     restaurants = results.map do |result|
       r = Restaurant.new()
       r.name = result[:name]
