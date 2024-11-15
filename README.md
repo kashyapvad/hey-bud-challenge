@@ -11,8 +11,9 @@ https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?latitude=40.74066&longitude=-73.9747072&cuisine=american
 
-Note: Heroku imposes a 30 seconds timeout on requests so if you see a an application error from heroku, please try again. (Time out from the app is just a JSON response with error message that looks different from the one by heroku)
-
+Note: 
+1. Heroku imposes a 30 seconds timeout on requests so if you see a an application error from heroku, please try again. (Time out from the app is just a JSON response with error message that looks different from the one by heroku)
+2. when both coordinates and location are provided, coordinates will be used.
 
 Solution: 
   I've first used Google Places API to get the list of restaurants and then used OpenAI to enrich the data.

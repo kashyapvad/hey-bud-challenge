@@ -20,7 +20,8 @@ class RestaurantService
 
     resposne = GooglePlacesClient.nearby_search(query).with_indifferent_access
     raise "Service Unavailable", resposne[:status] if resposne[:status] != "OK"
-    restaurants = resposne[:results].map do |result|
+    results = (resposne[:results] || [])
+    restaurants = results.map do |result|
       r = Restaurant.new()
       r.name = result[:name]
       r.address = result[:vicinity]
@@ -43,21 +44,44 @@ class RestaurantService
     prompt = RestaurantService::PROMPT.gsub("{{RESTAURANTS_LIST}}", restaurants.map { |r| r.attributes.except("_id") }.to_json)
     response = "#{llm}Client".constantize.send_prompt(prompt)
     raise "Service Unavailable", response[:error] if response[:error].present?
-    eval(response[:choices].first[:message][:content].gsub("json", "").gsub("`", ""))
+    eval(response[:choices].first[:message][:content].gsub("json", "").gsub("`", "")) || []
     # We can parse this data and then save it to database
   end
 
   def self.fetch options={}
     opts = options.with_indifferent_access
+    key = nil
+    if opts[:city].present? and opts[:neighborhood].present?
+      key = "restaurants_#{opts[:city]}_#{opts[:neighborhood]}_#{opts[:cuisine]}}"
+    end
+
+    if opts[:longitude].present? and opts[:latitude].present?
+      key = "restaurants_#{opts[:longitude]}_#{opts[:latitude]}_#{opts[:cuisine]}}"
+    end
+
     cuisine = opts[:cuisine].to_s.downcase.squish
-    restaurants = RestaurantService.search(opts)
-    results = RestaurantService.enrich(restaurants, opts)
-    sorted_results = results.sort_by { |r| -r[:rating].to_f }
-    sorted_results.filter do |r| 
+    max_results = opts[:max_results].to_i.zero? ? 3 : opts[:max_results].to_i
+    min_rating = opts[:min_rating].to_f.zero? ? 3.5 : opts[:min_rating].to_f
+
+    # Get results from Redis Cache
+    restaurants = global_redis_client.get(key)
+    restaurants = eval restaurants if restaurants.present?
+    if restaurants.blank?
+      restaurants = RestaurantService.search(opts)
+      restaurants = RestaurantService.enrich(restaurants, opts)
+    end
+    sorted_restaurants = restaurants.sort_by { |r| -r[:rating].to_f }
+
+    # Save results to Redis Cache
+    global_redis_client.set(key, sorted_restaurants, ex: 10.minutes)
+    
+    data = sorted_restaurants.filter do |r| 
       restaurant_cuisine = r[:cuisine].to_s.downcase.squish
       search_cuisine = cuisine.to_s.downcase.squish
       restaurant_cuisine.include?(search_cuisine) || search_cuisine.include?(restaurant_cuisine)
     end
+    data = data.select { |r| r[:rating].to_f >= min_rating }
+    data.first(max_results)
   end
 
   def self.export_to_spreadsheet restaurants, options={}
