@@ -50,18 +50,14 @@ class RestaurantService
   def self.fetch options={}
     opts = options.with_indifferent_access
     cuisine = opts[:cuisine].to_s.downcase.squish
-    max_results = opts[:max_results].to_i.zero? ? 3 : opts[:max_results].to_i
-    min_rating = opts[:min_rating].to_f.zero? ? 3.5 : opts[:min_rating].to_f
     restaurants = RestaurantService.search(opts)
     results = RestaurantService.enrich(restaurants, opts)
     sorted_results = results.sort_by { |r| -r[:rating].to_f }
-    data = sorted_results.filter do |r| 
+    sorted_results.filter do |r| 
       restaurant_cuisine = r[:cuisine].to_s.downcase.squish
       search_cuisine = cuisine.to_s.downcase.squish
       restaurant_cuisine.include?(search_cuisine) || search_cuisine.include?(restaurant_cuisine)
     end
-    data = data.select { |r| r[:rating].to_f >= min_rating }
-    data.first(max_results)
   end
 
   def self.export_to_spreadsheet restaurants, options={}
