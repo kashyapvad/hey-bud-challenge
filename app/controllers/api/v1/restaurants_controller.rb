@@ -28,8 +28,8 @@ class Api::V1::RestaurantsController < Api::BaseController
       results = global_redis_client.get(key)
       results = eval results if results.present?
     end
-    results.filter! { |r| r[:rating].to_f >= restaurant_params[:min_rating].to_f } if results and restaurant_params[:min_rating].present? # If min_rating is not provided in the precious request# If min_rating is not provided in the previous request
-    results = RestaurantService.fetch(restaurant_params.to_h) if results.blank
+    results.filter! { |r| r[:rating].to_f >= restaurant_params[:min_rating].to_f } if results and restaurant_params[:min_rating].present? # If min_rating is not provided in the precious request# If min_rating is not provided in the preious request
+    results = RestaurantService.fetch(restaurant_params.to_h)
 
     if results.blank?
       raise Api::V1::Errors::NoResultsFoundError, "No results found matching the specified search criteria"
