@@ -6,6 +6,8 @@ To make it easy I've deployed the app on heroku and here's the endpoint you can 
 Here are some examples of how to use the endpoint:
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=italian
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=mexican
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=San%20Francisco&neighborhood=Soma&cuisine=indian
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=Miami&neighborhood=Brickell&cuisine=asian
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?&neighborhood=West%20Village&cuisine=indian
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&cuisine=indian
 https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village

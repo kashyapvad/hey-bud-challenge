@@ -88,6 +88,7 @@ class RestaurantService
     opts = options.with_indifferent_access
     email = opts[:email].squish.downcase
     return unless email.present?
+    sheet_name = "Restaurants #{opts[:city]} #{opts[:neighborhood]}"
     tab_name = opts[:cuisine] || "Restaurants"
     sheet_id = CsvExporterService.export_restaurants restaurants, :restaurants, tab_name
     GoogleDriveClient.add_permission sheet_id, email, 'reader'
