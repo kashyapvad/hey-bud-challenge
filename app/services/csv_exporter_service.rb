@@ -3,8 +3,8 @@ require 'csv'
 class CsvExporterService
 
   FORMATS = {
-    compliance_report: {
-      headers: ["description", "extracted/analyzed_value", "kmbr_requirement", "compliance_status"],
+    restaurants: {
+      headers: [:name, :address, :rating, :total_ratings, :price_level, :geo_coordinates, :cuisine, :budget_per_person, :opening_hours, :contact_information, :special_features],
       field_mapping: {}
     }
   }
@@ -21,7 +21,7 @@ class CsvExporterService
 
   def self.extract_field instance, field
     method_collisions = [:zip] # dont call data.send(:zip) when you want data[:zip] since zip is already a built in method and not zipcode
-    properties = field.split(".").map &:to_sym
+    properties = field.to_s.split(".").map &:to_sym
     data = instance
     data = data.with_indifferent_access if data.respond_to? :with_indifferent_access
     properties.each do |property|
@@ -65,29 +65,22 @@ class CsvExporterService
     end
   end
 
-  def self.export_compliance_report plan
-    headers = FORMATS[:compliance_report][:headers]
+  def self.export_restaurants restaurants, sheet_name, tab_name
+    headers = FORMATS[:restaurants][:headers]
     rows = []
     tabs_data = {}
-    report =  plan.compliance_report[:parameters]
-    summary = plan.compliance_report[:summary]
-    return unless report.present?
+    return unless restaurants.present?
     rows << headers.map(&:to_s).map(&:titleize)
-    report.each do |h|
-      resource = h.transform_keys { |k| k.downcase.to_key }
-      data = extract_data(resource, headers)
+    restaurants.each do |restaurant|
+      data = extract_data(restaurant, headers)
       row = row_for_data(data, headers)
       rows << row
     end
-    rows += [[""], ["Summary"]]
-    rows += summary.map{|s| [s]}
-    rows
     csv = rows_to_csv rows
-    tabs_data[plan.title] = csv
-    report_sheet_id = plan.report_sheet_id
-    report_sheet_id ||= GoogleSheetClient.create_new_spreadsheet_for(:compliance_report, plan.title).spreadsheet_id
-    plan.set report_sheet_id: report_sheet_id unless plan.report_sheet_id.present?
+    tabs_data[tab_name] = csv
+    report_sheet_id = GoogleSheetClient.create_new_spreadsheet_for(sheet_name, tab_name).spreadsheet_id
     GoogleSheetClient.sync_tabs_for report_sheet_id, tabs_data
+    report_sheet_id
   end
 
 end

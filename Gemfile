@@ -30,6 +30,7 @@ gem 'google-apis-sheets_v4', '~> 0.36.0'
 
 #db
 gem 'mongoid', '~> 9.0.1'
+gem 'mongoid-geospatial', '~> 5.0'
 
 #aws
 gem 'aws-sdk-s3', '~> 1.160'
@@ -51,6 +52,9 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
+
+# Geocoding support for location-based features
+gem 'geocoder', '~> 1.8'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

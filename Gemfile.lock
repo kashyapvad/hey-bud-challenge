@@ -136,6 +136,9 @@ GEM
     fiddle (1.1.2)
     foreman (0.88.1)
     gems (1.2.0)
+    geocoder (1.8.3)
+      base64 (>= 0.1.0)
+      csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-api-client (0.53.0)
@@ -210,6 +213,8 @@ GEM
       activemodel (>= 5.1, < 7.2, != 7.0.0)
       concurrent-ruby (>= 1.0.5, < 2.0)
       mongo (>= 2.18.0, < 3.0.0)
+    mongoid-geospatial (5.1.0)
+      mongoid (>= 4.0.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.7.1)
@@ -405,6 +410,7 @@ DEPENDENCIES
   dotenv-rails (~> 3.1.2)
   fiddle
   foreman (~> 0.88.1)
+  geocoder (~> 1.8)
   google-api-client (~> 0.53.0)
   google-apis-sheets_v4 (~> 0.36.0)
   googleauth (~> 1.11)
@@ -412,6 +418,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   mongoid (~> 9.0.1)
+  mongoid-geospatial (~> 5.0)
   ostruct
   puma (>= 5.0)
   rails (~> 7.0)
