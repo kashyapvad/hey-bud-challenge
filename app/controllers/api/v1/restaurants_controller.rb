@@ -2,7 +2,7 @@ class Api::V1::RestaurantsController < Api::BaseController
 
   def home
     render json: {
-      message: "Please Use Postman/CURL to test the API: api/v1/restaurants)"
+      message: "Please Use Postman/CURL to test the API: api/v1/restaurants :)"
     }
   end
 

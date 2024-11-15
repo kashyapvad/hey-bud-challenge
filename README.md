@@ -4,12 +4,12 @@ To make it easy I've deployed the app on heroku and here's the endpoint you can 
 
 
 Here are some examples of how to use the endpoint:
-http://localhost:3000/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=italian
-http://localhost:3000/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=mexican
-http://localhost:3000/api/v1/restaurants?&neighborhood=West%20Village&cuisine=indian
-http://localhost:3000/api/v1/restaurants?city=New%20York&cuisine=indian
-http://localhost:3000/api/v1/restaurants?city=New%20York&neighborhood=West%20Village
-http://localhost:3000/api/v1/restaurants?latitude=40.74066&longitude=-73.9747072&cuisine=american
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=italian
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village&cuisine=mexican
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?&neighborhood=West%20Village&cuisine=indian
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&cuisine=indian
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?city=New%20York&neighborhood=West%20Village
+https://hey-bud-challenge-b6e22a301aaf.herokuapp.com/api/v1/restaurants?latitude=40.74066&longitude=-73.9747072&cuisine=american
 
 
 Solution: 
