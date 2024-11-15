@@ -29,8 +29,8 @@ class Api::V1::RestaurantsController < Api::BaseController
       results = eval results if results.present?
     end
 
-    max_results = opts[:max_results].to_i.zero? ? 3 : opts[:max_results].to_i
-    min_rating = opts[:min_rating].to_f.zero? ? 3.5 : opts[:min_rating].to_f
+    max_results = restaurant_params[:max_results].to_i.zero? ? 3 : restaurant_params[:max_results].to_i
+    min_rating = restaurant_params[:min_rating].to_f.zero? ? 3.5 : restaurant_params[:min_rating].to_f
     restaurants = RestaurantService.fetch(restaurant_params.to_h)
     results = restaurants.filter! { |r| r[:rating].to_f >= min_rating }.first(max_results)
 
