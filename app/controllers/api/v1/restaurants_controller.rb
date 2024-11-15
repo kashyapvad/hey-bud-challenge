@@ -32,7 +32,8 @@ class Api::V1::RestaurantsController < Api::BaseController
     max_results = restaurant_params[:max_results].to_i.zero? ? 3 : restaurant_params[:max_results].to_i
     min_rating = restaurant_params[:min_rating].to_f.zero? ? 3.5 : restaurant_params[:min_rating].to_f
     restaurants = RestaurantService.fetch(restaurant_params.to_h)
-    results = restaurants.filter! { |r| r[:rating].to_f >= min_rating }.first(max_results)
+    results = restaurants.filter { |r| r[:rating].to_f >= min_rating }
+    results = results.first(max_results) if results.present?
 
     if results.blank?
       raise Api::V1::Errors::NoResultsFoundError, "No results found matching the specified search criteria"
