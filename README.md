@@ -31,7 +31,7 @@ Design considerations:
   1. I've services for OpenAI and Google Places with room to add more LLM providers and SearchAPI providers in the future.
   2. I've used api/v1 for endpoints to make it easy to add a new version in the future and to add a front end app that can leverage the API for a platform.
   3. As more resources are added like restaurants, we can have more controllers and endpoints for CRUD operations.
-  4. I've added modeling for Restaurants to make it more structured and pass it around different services but didn't use any ORM to keep it simple.
+  4. I've added modeling for Restaurants to make it more structured and pass it around different services.
   5. I've deployed the app on heroku and enabled auto-deploy to make it easy to deploy and scale with room to integrate a CI/CD pipeline in the future.
   6. I've created restaurant_service.rb to keep all the business logic of data aggregation and enrichment in one place.
   7. As we use more external APIs, new clients can be created and those clients can be used in restaurant_service.rb to aggregate, enrich, and consolidate data from multiple sources in a single places.
