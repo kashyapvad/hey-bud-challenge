@@ -18,9 +18,9 @@ class RestaurantService
       query[:location] = "#{coordinates.first}, #{coordinates.last}"
     end
 
-    resposne = GooglePlacesClient.nearby_search(query).with_indifferent_access
-    raise "Service Unavailable", resposne[:status] if resposne[:status] != "OK"
-    results = (resposne[:results] || []).first(15) # to reduce the prompt size and avoid heroku timeouts
+    response = GooglePlacesClient.nearby_search(query).with_indifferent_access
+    raise "Service Unavailable: #{response[:status]}" if response[:status] != "OK"
+    results = (response[:results] || []).first(15) # to reduce the prompt size and avoid heroku timeouts
     restaurants = results.map do |result|
       r = Restaurant.new()
       r.name = result[:name]
@@ -43,20 +43,21 @@ class RestaurantService
     llm = opts[:llm] || "OpenAi"
     prompt = RestaurantService::PROMPT.gsub("{{RESTAURANTS_LIST}}", restaurants.map { |r| r.attributes.except("_id") }.to_json)
     response = "#{llm}Client".constantize.send_prompt(prompt)
-    raise "Service Unavailable", response[:error] if response[:error].present?
-    eval(response[:choices].first[:message][:content].gsub("json", "").gsub("`", "")) || []
-    # We can parse this data and then save it to database
+    raise "Service Unavailable: #{response[:error]}" if response[:error].present?
+    content = response[:choices].first[:message][:content].gsub(/```(json)?/, "").strip
+    JSON.parse(content).map(&:with_indifferent_access)
+    # We can save this data to the database
   end
 
   def self.fetch options={}
     opts = options.with_indifferent_access
     key = nil
     if opts[:city].present? and opts[:neighborhood].present?
-      key = "restaurants_#{opts[:city]}_#{opts[:neighborhood]}}}"
+      key = "restaurants_#{opts[:city]}_#{opts[:neighborhood]}"
     end
 
     if opts[:longitude].present? and opts[:latitude].present?
-      key = "restaurants_#{opts[:longitude]}_#{opts[:latitude]}}}"
+      key = "restaurants_#{opts[:longitude]}_#{opts[:latitude]}"
     end
 
     cuisine = opts[:cuisine].to_s.downcase.squish
@@ -65,7 +66,7 @@ class RestaurantService
 
     # Get results from Redis Cache
     restaurants = global_redis_client.get(key)
-    restaurants = eval restaurants if restaurants.present?
+    restaurants = JSON.parse(restaurants).map(&:with_indifferent_access) if restaurants.present?
     if restaurants.blank?
       restaurants = RestaurantService.search(opts)
       restaurants = RestaurantService.enrich(restaurants, opts)
@@ -73,7 +74,7 @@ class RestaurantService
     sorted_restaurants = restaurants.sort_by { |r| -r[:rating].to_f }
 
     # Save results to Redis Cache
-    global_redis_client.set(key, sorted_restaurants, ex: 10.minutes)
+    global_redis_client.set(key, sorted_restaurants.to_json, ex: 10.minutes)
     
     data = sorted_restaurants.filter do |r| 
       restaurant_cuisine = r[:cuisine].to_s.downcase.squish
